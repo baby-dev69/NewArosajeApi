@@ -18,6 +18,36 @@ namespace NewArosajeApi.Controllers
             this.ArosajeContext = ArosajeContext;
         }
 
+        [HttpGet("GetUser/{id}")]
+        public async Task<ActionResult<UserDTO>> Get(int id)
+        {
+            var annonce = await ArosajeContext.Userdata.Where(p => p.UserId == id)
+                .Select(s => new UserDTO
+                {
+                    UserId = s.UserId,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    Age = s.Age,
+                    Email = s.Email,
+                    Phone = s.Phone,
+                    Status = s.Status,
+                    UserAddress = s.UserAddress,
+                    Username = s.Username,
+                    Password = s.Password,
+                    CityId = s.CityId,
+                    TypeId = s.TypeId
+                })
+                .FirstOrDefaultAsync();
+
+            if (annonce == null)
+            {
+                return NotFound();
+            }
+
+            return annonce;
+        }
+
+
         [HttpPost("InsertUser")]
         public async Task<HttpStatusCode> InsertUser(UserDTO User)
         {
