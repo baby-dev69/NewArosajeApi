@@ -73,6 +73,62 @@ namespace NewArosajeApi.Controllers
             return HttpStatusCode.Created;
         }
 
+        [HttpPut("UpdateUser/{id}")]
+        public async Task<ActionResult> UpdatePlant(int id, UserDTO userDTO)
+        {
+            if (id != userDTO.UserId)
+            {
+                return BadRequest();
+            }
+
+            var user = await ArosajeContext.Userdata.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Mettre à jour les valeurs des colonnes de la plante
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+            user.Age = userDTO.Age;
+            user.Email = userDTO.Email;
+                user.Phone = userDTO.Phone;
+            user.Status = userDTO.Status;
+            user.UserAddress = userDTO.UserAddress;
+            user.Username = userDTO.Username;
+            user.Password = userDTO.Password;
+            user.CityId = userDTO.CityId;
+            user.TypeId = userDTO.TypeId;
+
+            try
+            {
+                await ArosajeContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("DeleteUser/{id}")]
+        public async Task<ActionResult> DeletePlant(int id)
+        {
+            var user = await ArosajeContext.Userdata.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            ArosajeContext.Userdata.Remove(user);
+            await ArosajeContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
 
     }
 }
