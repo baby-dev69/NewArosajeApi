@@ -3,6 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using NewArosajeApi.DTO;
 using NewArosajeApi.Entities;
 using System.Net;
+using System.Text;
+using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 
 namespace NewArosajeApi.Controllers
 {
@@ -47,6 +53,53 @@ namespace NewArosajeApi.Controllers
             return annonce;
         }
 
+        [HttpPost("Authenticate")]
+        public async Task<IActionResult> Authenticate(string username, string password)
+        {
+            var user = await ArosajeContext.Userdata.SingleOrDefaultAsync(x => x.Username == username);
+
+            // Vérifier si l'utilisateur existe
+            if (user == null)
+            {
+                return BadRequest("Nom d'utilisateur ou mot de passe incorrect.");
+            }
+
+            // Vérifier le mot de passe
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+                if (hashedPassword != user.Password)
+                {
+                    return BadRequest("Nom d'utilisateur ou mot de passe incorrect.");
+                }
+            }
+
+            // Générer une clé secrète forte
+            var key = new byte[32];
+            using (var generator = RandomNumberGenerator.Create())
+            {
+                generator.GetBytes(key);
+            }
+
+            // Si l'utilisateur est authentifié, générer un jeton JWT
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim(ClaimTypes.Name, user.UserId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7), // durée de validité du jeton
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            // Retourner le jeton JWT et la clé secrète
+            return Ok(new { Token = tokenHandler.WriteToken(token), Key = Convert.ToBase64String(key) });
+        }
+
 
         [HttpPost("InsertUser")]
         public async Task<HttpStatusCode> InsertUser(UserDTO User)
@@ -66,6 +119,22 @@ namespace NewArosajeApi.Controllers
                 CityId = User.CityId,
                 TypeId = User.TypeId
             };
+
+            // Chiffrement du mot de passe avant l'insertion
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(User.Password));
+                var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+                entity.Password = hashedPassword;
+            }    // Chiffrement du mot de passe avant l'insertion
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(User.Password));
+                var hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+                entity.Password = hashedPassword;
+            }
 
             ArosajeContext.Userdata.Add(entity);
             await ArosajeContext.SaveChangesAsync();

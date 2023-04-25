@@ -15,6 +15,17 @@ builder.Services.AddEntityFrameworkMySQL()
     {
         options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "policy",
+    policy =>
+    {
+        policy.WithOrigins("*")
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -32,3 +43,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+app.UseCors("policy");

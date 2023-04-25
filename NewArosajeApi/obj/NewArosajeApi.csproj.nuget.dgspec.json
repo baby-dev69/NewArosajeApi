@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\devlyon11\\Desktop\\Projets\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj": {}
+    "C:\\Users\\moi\\Desktop\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\devlyon11\\Desktop\\Projets\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj": {
+    "C:\\Users\\moi\\Desktop\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\devlyon11\\Desktop\\Projets\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj",
+        "projectUniqueName": "C:\\Users\\moi\\Desktop\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj",
         "projectName": "NewArosajeApi",
-        "projectPath": "C:\\Users\\devlyon11\\Desktop\\Projets\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj",
-        "packagesPath": "C:\\Users\\devlyon11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\devlyon11\\Desktop\\Projets\\NewArosajeApi\\NewArosajeApi\\obj\\",
+        "projectPath": "C:\\Users\\moi\\Desktop\\NewArosajeApi\\NewArosajeApi\\NewArosajeApi.csproj",
+        "packagesPath": "C:\\Users\\moi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\moi\\Desktop\\NewArosajeApi\\NewArosajeApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\devlyon11\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\moi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -63,6 +63,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.29.0, )"
             }
           },
           "imports": [
